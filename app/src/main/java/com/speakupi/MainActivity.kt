@@ -225,9 +225,7 @@ class MainActivity : AppCompatActivity() {
         val sourceTexts = listOf(
             getString(R.string.received_announcements_toggle),
             getString(R.string.notification_send_permission_button),
-            getString(R.string.notification_send_permission_explanation),
             getString(R.string.notification_read_permission_button),
-            getString(R.string.notification_read_permission_explanation),
             getString(R.string.battery_usage_explanation),
             getString(R.string.battery_usage_button),
             getString(R.string.custom_message_heading),
@@ -239,15 +237,13 @@ class MainActivity : AppCompatActivity() {
         UiTextTranslator.translateList(this, sourceTexts) { translated ->
             receivedAnnouncementsSwitch.text = translated[0]
             notificationSendPermissionButton.text = translated[1]
-            notificationSendPermissionExplanation.text = translated[2]
-            notificationReadPermissionButton.text = translated[3]
-            notificationReadPermissionExplanation.text = translated[4]
-            batteryUsageExplanation.text = translated[5]
-            batteryUsageButton.text = translated[6]
-            customMessageHeading.text = translated[7]
-            customMessageInput.hint = translated[8]
-            customMessageSaveButton.text = translated[9]
-            reportButton.text = translated[10]
+            notificationReadPermissionButton.text = translated[2]
+            batteryUsageExplanation.text = translated[3]
+            batteryUsageButton.text = translated[4]
+            customMessageHeading.text = translated[5]
+            customMessageInput.hint = translated[6]
+            customMessageSaveButton.text = translated[7]
+            reportButton.text = translated[8]
         }
     }
 

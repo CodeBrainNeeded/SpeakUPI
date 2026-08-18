@@ -32,8 +32,8 @@ object UiTextTranslator {
             return
         }
 
-        if (text.contains('"')) {
-            dispatch(text, onResult)
+        if (QUOTED_SEGMENT_REGEX.containsMatchIn(text)) {
+            translateWithQuotedSegments(context, text, onResult)
             return
         }
 
@@ -62,7 +62,7 @@ object UiTextTranslator {
                 activeTranslator.translate(text)
                 .addOnSuccessListener { translated ->
                     translationCache[text] = translated
-                    dispatch(translated, onResult)
+                    dispatch(restoreQuoteDelimiters(text, translated), onResult)
                 }
                 .addOnFailureListener {
                     dispatch(text, onResult)
@@ -151,6 +151,74 @@ object UiTextTranslator {
         mainHandler.post { onResult(text) }
     }
 
+    private fun restoreQuoteDelimiters(source: String, translated: String): String {
+        val quotedValues = QUOTED_SEGMENT_REGEX.findAll(source)
+            .map { it.value.removePrefix("\"").removeSuffix("\"") }
+            .toList()
+
+        if (quotedValues.isEmpty() || translated.contains('"')) {
+            return translated
+        }
+
+        var restored = translated
+        quotedValues.forEach { value ->
+            val start = restored.indexOf(value)
+            if (start >= 0) {
+                restored = buildString {
+                    append(restored.substring(0, start))
+                    append('"')
+                    append(value)
+                    append('"')
+                    append(restored.substring(start + value.length))
+                }
+            }
+        }
+        return restored
+    }
+
+    private fun translateWithQuotedSegments(
+        context: Context,
+        text: String,
+        onResult: (String) -> Unit
+    ) {
+        val segments = mutableListOf<TranslationSegment>()
+        var cursor = 0
+
+        QUOTED_SEGMENT_REGEX.findAll(text).forEach { match ->
+            if (match.range.first > cursor) {
+                segments += TranslationSegment(text.substring(cursor, match.range.first), true)
+            }
+            segments += TranslationSegment(match.value, false)
+            cursor = match.range.last + 1
+        }
+
+        if (cursor < text.length) {
+            segments += TranslationSegment(text.substring(cursor), true)
+        }
+
+        val translatedSegments = MutableList(segments.size) { "" }
+        fun translateAt(index: Int) {
+            if (index >= segments.size) {
+                dispatch(restoreQuoteDelimiters(text, translatedSegments.joinToString(separator = "")), onResult)
+                return
+            }
+
+            val segment = segments[index]
+            if (!segment.shouldTranslate) {
+                translatedSegments[index] = segment.text
+                translateAt(index + 1)
+                return
+            }
+
+            translate(context, segment.text) { translated ->
+                translatedSegments[index] = translated
+                translateAt(index + 1)
+            }
+        }
+
+        translateAt(0)
+    }
+
     private fun dispatchList(texts: List<String>, onResult: (List<String>) -> Unit) {
         if (Looper.getMainLooper().thread == Thread.currentThread()) {
             onResult(texts)
@@ -158,4 +226,11 @@ object UiTextTranslator {
         }
         mainHandler.post { onResult(texts) }
     }
+
+    private data class TranslationSegment(
+        val text: String,
+        val shouldTranslate: Boolean
+    )
+
+    private val QUOTED_SEGMENT_REGEX = Regex("\"[^\"]*\"")
 }
