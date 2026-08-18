@@ -27,6 +27,7 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
     private lateinit var settingsRepository: SettingsRepository
     private lateinit var notificationSendPermissionButton: MaterialButton
+    private lateinit var notificationSendPermissionExplanation: TextView
     private lateinit var notificationReadPermissionExplanation: TextView
     private lateinit var notificationReadPermissionButton: MaterialButton
     private lateinit var batteryUsageExplanation: TextView
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var customMessageHeading: TextView
     private lateinit var customMessageInput: EditText
     private lateinit var customMessageSaveButton: MaterialButton
+    private lateinit var reportButton: MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         ContextCompat.startForegroundService(this, Intent(this, ListenerForegroundService::class.java))
 
         notificationSendPermissionButton = findViewById(R.id.notificationSendPermissionButton)
+        notificationSendPermissionExplanation = findViewById(R.id.notificationSendPermissionExplanation)
         notificationReadPermissionExplanation = findViewById(R.id.notificationReadPermissionExplanation)
         notificationReadPermissionButton = findViewById(R.id.notificationReadPermissionButton)
         batteryUsageExplanation = findViewById(R.id.batteryUsageExplanation)
@@ -68,6 +71,10 @@ class MainActivity : AppCompatActivity() {
         customMessageHeading = findViewById(R.id.customMessageHeading)
         customMessageInput = findViewById(R.id.customMessageInput)
         customMessageSaveButton = findViewById(R.id.customMessageSaveButton)
+        reportButton = findViewById(R.id.reportButton)
+        reportButton.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(REPORT_URL)))
+        }
         customMessageInput.setText(settingsRepository.getCustomAnnouncementMessage())
         customMessageSaveButton.setOnClickListener {
             settingsRepository.setCustomAnnouncementMessage(customMessageInput.text?.toString().orEmpty())
@@ -111,7 +118,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updatePermissionButtons() {
-        notificationSendPermissionButton.visibility = if (needsNotificationSendPermission()) {
+        val notificationSendPermissionMissing = needsNotificationSendPermission()
+        notificationSendPermissionButton.visibility = if (notificationSendPermissionMissing) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+        notificationSendPermissionExplanation.visibility = if (notificationSendPermissionMissing) {
             View.VISIBLE
         } else {
             View.GONE
@@ -212,25 +225,29 @@ class MainActivity : AppCompatActivity() {
         val sourceTexts = listOf(
             getString(R.string.received_announcements_toggle),
             getString(R.string.notification_send_permission_button),
-            getString(R.string.notification_read_permission_explanation),
+            getString(R.string.notification_send_permission_explanation),
             getString(R.string.notification_read_permission_button),
+            getString(R.string.notification_read_permission_explanation),
             getString(R.string.battery_usage_explanation),
             getString(R.string.battery_usage_button),
             getString(R.string.custom_message_heading),
             getString(R.string.custom_message_hint),
-            getString(R.string.custom_message_save_button)
+            getString(R.string.custom_message_save_button),
+            getString(R.string.report_button)
         )
 
         UiTextTranslator.translateList(this, sourceTexts) { translated ->
             receivedAnnouncementsSwitch.text = translated[0]
             notificationSendPermissionButton.text = translated[1]
-            notificationReadPermissionExplanation.text = translated[2]
+            notificationSendPermissionExplanation.text = translated[2]
             notificationReadPermissionButton.text = translated[3]
-            batteryUsageExplanation.text = translated[4]
-            batteryUsageButton.text = translated[5]
-            customMessageHeading.text = translated[6]
-            customMessageInput.hint = translated[7]
-            customMessageSaveButton.text = translated[8]
+            notificationReadPermissionExplanation.text = translated[4]
+            batteryUsageExplanation.text = translated[5]
+            batteryUsageButton.text = translated[6]
+            customMessageHeading.text = translated[7]
+            customMessageInput.hint = translated[8]
+            customMessageSaveButton.text = translated[9]
+            reportButton.text = translated[10]
         }
     }
 
@@ -412,6 +429,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     companion object {
+        private const val REPORT_URL = "https://forms.gle/XnsvqLHUGeCMVyhw8"
         private const val REQUEST_POST_NOTIFICATIONS = 1001
     }
 }

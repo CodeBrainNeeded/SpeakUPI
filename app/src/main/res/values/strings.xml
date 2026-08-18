@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">SpeakUPI</string>
+    <string name="app_banner">SpeakUPI</string>
     <string name="listener_label">SpeakUPI Notification Listener</string>
     <string name="received_announcements_toggle">Announce received payments</string>
     <string name="notification_send_permission_button">Notification-sending permission is required. Tap to open settings.</string>
-    <string name="notification_read_permission_explanation">To work, SpeakUPI needs notification-reading permissions. To grant it, tap the button below, find and select \"SpeakUPI\" on the next screen, then select \"Allow notification access\".</string>
+    <string name="notification_send_permission_explanation">Tap the button above to open SpeakUPI notification settings, then enable the toggle for &quot;All SpeakUPI notifications&quot;.</string>
+    <string name="notification_read_permission_explanation">Tap the button above to open notification access settings, then find and select &quot;SpeakUPI&quot;. On the next page, enable the toggle for &quot;Allow notification access&quot;.</string>
     <string name="notification_read_permission_button">Notification-reading permission is required. Tap to open settings.</string>
     <string name="battery_usage_explanation">SpeakUPI may be stopped in the background if battery usage is restricted. Tap below and set battery usage to Unrestricted for better reliability with the screen off.</string>
     <string name="battery_usage_button">Open battery usage settings</string>
@@ -12,6 +14,7 @@
     <string name="custom_message_hint">Optional extra message to read after the received amount</string>
     <string name="custom_message_save_button">Save message</string>
     <string name="custom_message_saved">Message saved</string>
+    <string name="report_button">Problem Report</string>
     <string name="speech_template">Received %1$s rupees</string>
     <string name="foreground_channel_name">SpeakUPI Reliability</string>
     <string name="foreground_notification_title">SpeakUPI reliability mode</string>

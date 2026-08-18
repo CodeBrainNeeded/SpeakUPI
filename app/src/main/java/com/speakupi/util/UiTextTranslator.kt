@@ -32,6 +32,11 @@ object UiTextTranslator {
             return
         }
 
+        if (text.contains('"')) {
+            dispatch(text, onResult)
+            return
+        }
+
         val targetLanguage = resolveTargetLanguage(context)
         if (targetLanguage == null || targetLanguage == TranslateLanguage.ENGLISH) {
             dispatch(text, onResult)
@@ -54,7 +59,7 @@ object UiTextTranslator {
                 return@ensureModel
             }
 
-            activeTranslator.translate(text)
+                activeTranslator.translate(text)
                 .addOnSuccessListener { translated ->
                     translationCache[text] = translated
                     dispatch(translated, onResult)

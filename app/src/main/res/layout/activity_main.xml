@@ -12,6 +12,16 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <TextView
+            android:id="@+id/appBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/app_banner"
+            android:textColor="@color/primary"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/notificationSendPermissionButton"
             style="@style/Widget.SpeakUPI.RequiredActionButton"
@@ -22,13 +32,13 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/notificationReadPermissionExplanation"
+            android:id="@+id/notificationSendPermissionExplanation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/required_action_hint_bg"
             android:padding="12dp"
-            android:text="@string/notification_read_permission_explanation"
+            android:text="@string/notification_send_permission_explanation"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             android:textColor="@color/required_action_hint_text"
             android:visibility="gone" />
@@ -40,6 +50,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/notification_read_permission_button"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/notificationReadPermissionExplanation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/required_action_hint_bg"
+            android:padding="12dp"
+            android:text="@string/notification_read_permission_explanation"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+            android:textColor="@color/required_action_hint_text"
             android:visibility="gone" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
@@ -94,6 +116,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/custom_message_save_button" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/reportButton"
+            style="@style/Widget.SpeakUPI.ReportButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/report_button" />
 
     </LinearLayout>
 </ScrollView>
