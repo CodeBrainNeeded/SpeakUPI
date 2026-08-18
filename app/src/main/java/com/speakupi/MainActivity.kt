@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
 
             Handler(Looper.getMainLooper()).postDelayed({
                 if (!NotificationAccessUtils.isNotificationAccessEnabled(this)) {
-                    Toast.makeText(this, "Select \"Allow notification access\"", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Allow notification access.", Toast.LENGTH_LONG).show()
                 }
             }, 2000)
         } catch (e: Exception) {
@@ -219,12 +219,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (intent.resolveActivity(packageManager) != null) {
-            Toast.makeText(this, "Select \"All SpeakUPI notifications\"", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Select \"All SpeakUPI notifications\".", Toast.LENGTH_LONG).show()
             startActivity(intent)
             return
         }
 
-        Toast.makeText(this, "Select \"All SpeakUPI notifications\"", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Select \"All SpeakUPI notifications\".", Toast.LENGTH_LONG).show()
         startActivity(
             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                 data = Uri.fromParts("package", packageName, null)
