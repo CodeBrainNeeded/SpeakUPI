@@ -7,6 +7,8 @@ import android.app.ActivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.PowerManager
 import android.provider.Settings
 import android.view.View
@@ -114,7 +116,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openNotificationAccessSettings() {
-        startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+
+        if (intent.resolveActivity(packageManager) == null) {
+            Toast.makeText(this, "Select SpeakUPI.", Toast.LENGTH_LONG).show()
+            startActivity(Intent(Settings.ACTION_SETTINGS))
+            return
+        }
+
+        try {
+            Toast.makeText(this, "Select SpeakUPI.", Toast.LENGTH_LONG).show()
+            startActivity(intent)
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (!NotificationAccessUtils.isNotificationAccessEnabled(this)) {
+                    Toast.makeText(this, "Allow notification access", Toast.LENGTH_LONG).show()
+                }
+            }, 2000)
+        } catch (e: Exception) {
+            Toast.makeText(
+                this,
+                "Could not open Notification access settings. Please open Settings manually and search for Notification access.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun updatePermissionButtons() {
