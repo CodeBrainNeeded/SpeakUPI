@@ -6,7 +6,5 @@
         <item name="colorOnSecondary">@color/on_primary</item>
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/on_surface</item>
-        <item name="android:statusBarColor" tools:targetApi="l">@color/primary</item>
-        <item name="android:navigationBarColor">@color/surface</item>
     </style>
 </resources>

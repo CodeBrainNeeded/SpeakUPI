@@ -15,8 +15,11 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -42,7 +45,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        val rootScrollView = findViewById<View>(R.id.rootScrollView)
+        val rootScrollViewInitialPadding = intArrayOf(
+            rootScrollView.paddingLeft,
+            rootScrollView.paddingTop,
+            rootScrollView.paddingRight,
+            rootScrollView.paddingBottom
+        )
+        ViewCompat.setOnApplyWindowInsetsListener(rootScrollView) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                rootScrollViewInitialPadding[0] + systemBars.left,
+                rootScrollViewInitialPadding[1] + systemBars.top,
+                rootScrollViewInitialPadding[2] + systemBars.right,
+                rootScrollViewInitialPadding[3] + systemBars.bottom
+            )
+            insets
+        }
 
         settingsRepository = SettingsRepository(this)
         ContextCompat.startForegroundService(this, Intent(this, ListenerForegroundService::class.java))
