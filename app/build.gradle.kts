@@ -11,8 +11,8 @@ android {
         applicationId = "com.speakupi"
         minSdk = 26
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.01"
+        versionCode = 5
+        versionName = "1.02"
 
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a")

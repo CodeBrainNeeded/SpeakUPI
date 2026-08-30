@@ -19,7 +19,15 @@ class ListenerForegroundService : Service() {
         val fallbackText = getString(R.string.foreground_notification_text)
 
         ensureChannel(fallbackChannelName)
-        startForeground(NOTIFICATION_ID, buildNotification(fallbackTitle, fallbackText))
+
+        try {
+            startForeground(NOTIFICATION_ID, buildNotification(fallbackTitle, fallbackText))
+        } catch (e: Exception) {
+            // The system can refuse a foreground start (e.g. background-start restrictions); the
+            // notification listener still works on its own, so degrade quietly instead of crashing.
+            stopSelf()
+            return START_NOT_STICKY
+        }
 
         UiTextTranslator.translateList(this, listOf(fallbackChannelName, fallbackTitle, fallbackText)) { translated ->
             ensureChannel(translated[0])
@@ -27,7 +35,11 @@ class ListenerForegroundService : Service() {
             NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, translatedNotification)
         }
 
-        return START_STICKY
+        return START_NOT_STICKY
+    }
+
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        stopSelf()
     }
 
     private fun ensureChannel(channelName: String) {
